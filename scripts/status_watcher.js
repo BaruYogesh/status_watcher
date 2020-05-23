@@ -18,16 +18,30 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
         return
     }
 
-    
+    console.log(newPresence.activities);
+
+    let status = 0;
     for(const i in newPresence.activities){
         if(newPresence.activities[i].type === "PLAYING"){
-            console.log('playing a game');
-            RGBController.setYellow();
-        }
+            //console.log('playing a game');
+	    status=1;
+	    break;
+        } else {
+	    status=0;
+	}
     }
-    console.log('not busy');
-    RGBController.setGreen();
+    //console.log(status);
+    switch (status) {
+	case 1:
+	    console.log('in game');
+	    RGBController.setYellow();
+	    break;
+	case 0:
+	    console.log('not busy');
+	    RGBController.setGreen();
+	    break;
 
+    }
 })
 
 client.login(process.env.DISCORD_BOT_TOKEN);
