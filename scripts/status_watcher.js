@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const rgb = require('./RgbController');
 
-const RGBController = new rgb.RBGController();
+const RGBController = new rgb.RGBController();
 
 // client.on('message', message => {
 //     console.log(message.content)
@@ -42,6 +42,10 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
 	    break;
 
     }
+})
+
+process.on('SIGINT', () => {
+    RGBController.setNone();
 })
 
 client.login(process.env.DISCORD_BOT_TOKEN);

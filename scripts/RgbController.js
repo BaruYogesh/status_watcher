@@ -1,5 +1,5 @@
 
-class RBGController{
+class RGBController{
 
     constructor(){
 	var Gpio = require('pigpio').Gpio //include pigpio to interact with the GPIO
@@ -16,29 +16,31 @@ class RBGController{
     }
 
     setRed(){
-        this.ledRed.pwmWrite(255);
-        this.ledGreen.pwmWrite(0);
-        this.ledBlue.pwmWrite(0);
+        this.writeToLED(255, 0, 0);
 
     }
 
     setYellow(){
-	//console.log(this)
-        this.ledRed.pwmWrite(255);
-        this.ledGreen.pwmWrite(255);
-        this.ledBlue.pwmWrite(0);
-
+        this.writeToLED(255, 255, 0);
     }
 
     setGreen(){
-        this.ledRed.pwmWrite(0);
-        this.ledGreen.pwmWrite(255);
-        this.ledBlue.pwmWrite(0);
+        this.writeToLED(0, 255, 0);
 
+    }
+
+    setNone(){
+        this.writeToLED(0, 0, 0);
+    }
+
+    writeToLED(r, g, b){
+        this.ledRed.pwmWrite(r);
+        this.ledGreen.pwmWrite(g);
+        this.ledBlue.pwmWrite(b);
     }
 
 }
 
 module.exports = {
-    RBGController
+    RGBController
 }
