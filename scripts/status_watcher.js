@@ -4,16 +4,12 @@ const rgb = require('./RgbController');
 
 const RGBController = new rgb.RGBController();
 
-// client.on('message', message => {
-//     console.log(message.content)
-// }) 
+function updateStatus(newPresence) {
 
-client.on('ready', () => {
-    client.user.setStatus('invisible').catch(console.log)
-})
+    if(busy){
+        return;
+    }
 
-client.on('presenceUpdate', (oldPresence, newPresence) => {
-    
     if(newPresence.user.id != "151079705917915136"){
         return
     }
@@ -42,6 +38,64 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
 	    break;
 
     }
+}
+
+client.on('ready', () => {
+    client.user.setStatus('invisible').catch(console.log)
+})
+
+let busy = false;
+let busyInterval;
+
+client.on('message', (message) => {
+
+    if(message.author.id !== "151079705917915136"){
+        return;
+    }
+
+    if(message.content.startsWith('!setBusy')){
+        if(busy){
+            clearInterval(busyInterval);
+
+            busyInterval = setInterval(() => {
+                newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+
+                busy = false;
+                updateStatus(newPresence);
+            }, args[1] * 60000);
+
+        } else {
+            busy = true;
+            args = message.content.split(' ');
+            mins = args[1];
+
+            RGBController.setRed();
+            busyInterval = setInterval(() => {
+                newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+
+                busy = false;
+                updateStatus(newPresence);
+            }, args[1] * 60000);
+        }
+    }
+
+    if(message.content.startsWith('!clearBusy')){
+        if(busy){
+            busy = false;
+            clearInterval(busyInterval);
+
+            newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+            updateStatus(newPresence);
+        }
+    }
+
+
+    
+})
+
+client.on('presenceUpdate', (oldPresence, newPresence) => {
+    
+    updateStatus(newPresence);
 })
 
 process.on('SIGINT', () => {
