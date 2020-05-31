@@ -10,7 +10,7 @@ function updateStatus(newPresence) {
         return;
     }
 
-    if(newPresence.user.id != "151079705917915136"){
+    if(newPresence.user.id !== "151079705917915136"){
         return
     }
 
@@ -41,7 +41,11 @@ function updateStatus(newPresence) {
 }
 
 client.on('ready', () => {
-    client.user.setStatus('invisible').catch(console.log)
+    client.user.setStatus('invisible').catch(console.log);
+
+    newPresence = client.users.find(user => user.id === "151079705917915136");
+
+    updateStatus(newPresence);
 })
 
 let busy = false;
@@ -58,7 +62,7 @@ client.on('message', (message) => {
             clearInterval(busyInterval);
 
             busyInterval = setInterval(() => {
-                newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+                newPresence = client.users.cache.find(user => user.id === "151079705917915136").presence;
 
                 busy = false;
                 updateStatus(newPresence);
