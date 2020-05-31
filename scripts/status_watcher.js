@@ -43,7 +43,7 @@ function updateStatus(newPresence) {
 client.on('ready', () => {
     client.user.setStatus('invisible').catch(console.log);
 
-    newPresence = client.users.find(user => user.id === "151079705917915136");
+    newPresence = client.users.cache.find(user => user.id === "151079705917915136");
 
     updateStatus(newPresence);
 })
