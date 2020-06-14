@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const rgb = require('./RgbController');
 
+const discordUserId = process.env.DISCORD_USER_ID
+
 const RGBController = new rgb.RGBController();
 
 function updateStatus(newPresence) {
@@ -10,11 +12,11 @@ function updateStatus(newPresence) {
         return;
     }
 
-    if(newPresence.user.id !== "151079705917915136"){
+    if(newPresence.user.id !== discordUserId){
         return
     }
 
-    console.log(newPresence.activities);
+    //console.log(newPresence.activities);
 
     let status = 0;
     for(const i in newPresence.activities){
@@ -43,7 +45,7 @@ function updateStatus(newPresence) {
 client.on('ready', () => {
     client.user.setStatus('invisible').catch(console.log);
 
-    newPresence = client.users.cache.find(user => user.id === "151079705917915136");
+    newPresence = client.users.cache.find(user => user.id === discordUserId);
 
     updateStatus(newPresence);
 })
@@ -53,7 +55,7 @@ let busyInterval;
 
 client.on('message', (message) => {
 
-    if(message.author.id !== "151079705917915136"){
+    if(message.author.id !== discordUserId){
         return;
     }
 
@@ -62,7 +64,7 @@ client.on('message', (message) => {
             clearInterval(busyInterval);
 
             busyInterval = setInterval(() => {
-                newPresence = client.users.cache.find(user => user.id === "151079705917915136").presence;
+                newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
 
                 busy = false;
                 updateStatus(newPresence);
@@ -75,7 +77,7 @@ client.on('message', (message) => {
 
             RGBController.setRed();
             busyInterval = setInterval(() => {
-                newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+                newPresence = client.users.cache.find(user => user.id = discordUserId).presence;
 
                 busy = false;
                 updateStatus(newPresence);
@@ -88,7 +90,7 @@ client.on('message', (message) => {
             busy = false;
             clearInterval(busyInterval);
 
-            newPresence = client.users.cache.find(user => user.id = "151079705917915136").presence;
+            newPresence = client.users.cache.find(user => user.id = discordUserId).presence;
             updateStatus(newPresence);
         }
     }
@@ -104,6 +106,7 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
 
 process.on('SIGINT', () => {
     RGBController.setNone();
+    process.exit(1);
 })
 
 client.login(process.env.DISCORD_BOT_TOKEN);
