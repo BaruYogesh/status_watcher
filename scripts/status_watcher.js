@@ -3,7 +3,7 @@ const client = new Discord.Client();
 const rgb = require('./RgbController');
 
 const discordUserId = process.env.DISCORD_USER_ID
-
+console.log(discordUserId);
 const RGBController = new rgb.RGBController();
 
 function updateStatus(newPresence) {
@@ -45,7 +45,7 @@ function updateStatus(newPresence) {
 client.on('ready', () => {
     client.user.setStatus('invisible').catch(console.log);
 
-    newPresence = client.users.cache.find(user => user.id === discordUserId);
+    newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
 
     updateStatus(newPresence);
 })
@@ -77,7 +77,7 @@ client.on('message', (message) => {
 
             RGBController.setRed();
             busyInterval = setInterval(() => {
-                newPresence = client.users.cache.find(user => user.id = discordUserId).presence;
+                newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
 
                 busy = false;
                 updateStatus(newPresence);
@@ -90,7 +90,7 @@ client.on('message', (message) => {
             busy = false;
             clearInterval(busyInterval);
 
-            newPresence = client.users.cache.find(user => user.id = discordUserId).presence;
+            newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
             updateStatus(newPresence);
         }
     }
