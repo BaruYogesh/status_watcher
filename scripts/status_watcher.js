@@ -51,7 +51,7 @@ client.on('ready', () => {
 })
 
 let busy = false;
-let busyInterval;
+let busyTimeout;
 
 client.on('message', (message) => {
 
@@ -61,9 +61,9 @@ client.on('message', (message) => {
 
     if(message.content.startsWith('!setBusy')){
         if(busy){
-            clearInterval(busyInterval);
+            clearTimeout(busyTimeout);
 
-            busyInterval = setInterval(() => {
+            busyTimeout = setTimeout(() => {
                 newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
 
                 busy = false;
@@ -76,7 +76,7 @@ client.on('message', (message) => {
             mins = args[1];
 
             RGBController.setRed();
-            busyInterval = setInterval(() => {
+            busyTimeout = setTimeout(() => {
                 newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
 
                 busy = false;
@@ -88,7 +88,7 @@ client.on('message', (message) => {
     if(message.content.startsWith('!clearBusy')){
         if(busy){
             busy = false;
-            clearInterval(busyInterval);
+            clearTimeout(busyTimeout);
 
             newPresence = client.users.cache.find(user => user.id === discordUserId).presence;
             updateStatus(newPresence);
